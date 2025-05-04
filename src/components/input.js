@@ -12,7 +12,7 @@ export function createForm() {
     `
 }
 
-export async function handleButtonClicks() {
+export function handleButtonClicks() {
   const output = document.getElementById('output')
 
   document.getElementById('fetch-people').addEventListener('click', async () => {
@@ -69,7 +69,7 @@ export async function fetchData(endpoint) {
     }
     const data = await response.json()
     console.log(`Full API response from ${endpoint}:`, data) // Debugging
-    return data.result?.results || data.result // Adjust based on API response
+    return data.results || [] // Access the "results" array or return an empty array if it doesn't exist
   } catch (error) {
     console.error(`Error fetching data from ${endpoint}:`, error)
     throw error
