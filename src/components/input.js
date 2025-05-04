@@ -1,73 +1,64 @@
-export async function renderPlanetCharacterList() {
-  const planets = await fetchData('planets')
-  const characters = await fetchData('people')
+export function createForm() {
+  return `
+      <div class="space-y-4">
+        <h1 class="text-3xl font-bold text-center mb-4">Star Wars Data Explorer</h1>
+        <div class="flex justify-center space-x-4">
+          <button id="fetch-people" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Fetch People</button>
+          <button id="fetch-planets" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Fetch Planets</button>
+          <button id="fetch-ships" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Fetch Ships</button>
+        </div>
+        <div id="output" class="mt-6 p-4 bg-gray-800 text-white rounded shadow-lg"></div>
+      </div>
+    `
+}
 
-  console.log('Planets:', planets) // Debugging
-  console.log('Characters:', characters) // Debugging
+export async function handleButtonClicks() {
+  const output = document.getElementById('output')
 
-  // Ensure planets and characters are arrays
-  if (!Array.isArray(planets) || !Array.isArray(characters)) {
-    throw new Error('Planets or Characters data is not an array')
-  }
-
-  // Handle empty or missing data
-  if (!planets || planets.length === 0) {
-    throw new Error('No planets data available')
-  }
-
-  if (!characters || characters.length === 0) {
-    throw new Error('No characters data available')
-  }
-
-  // Map planet IDs to planet names
-  const planetMap = {}
-  planets.forEach((planet) => {
-    planetMap[planet.uid] = planet.name
+  document.getElementById('fetch-people').addEventListener('click', async () => {
+    output.innerHTML = '<p>Loading people...</p>'
+    try {
+      const people = await fetchData('people')
+      output.innerHTML = `
+          <h2 class="text-2xl font-bold mb-2">People</h2>
+          <ul class="list-disc pl-6">
+            ${people.map((person) => `<li>${person.name}</li>`).join('')}
+          </ul>
+        `
+    } catch (error) {
+      output.innerHTML = `<p class="text-red-500">Failed to fetch people: ${error.message}</p>`
+    }
   })
 
-  // Group characters by their planets
-  const groupedCharacters = {}
-  const otherCharacters = []
-
-  for (const character of characters) {
-    const planetId = character.properties.homeworld?.split('/').pop() // Extract planet ID from URL
-    if (planetMap[planetId]) {
-      if (!groupedCharacters[planetMap[planetId]]) {
-        groupedCharacters[planetMap[planetId]] = []
-      }
-      groupedCharacters[planetMap[planetId]].push(character.name)
-    } else {
-      otherCharacters.push(character.name)
+  document.getElementById('fetch-planets').addEventListener('click', async () => {
+    output.innerHTML = '<p>Loading planets...</p>'
+    try {
+      const planets = await fetchData('planets')
+      output.innerHTML = `
+          <h2 class="text-2xl font-bold mb-2">Planets</h2>
+          <ul class="list-disc pl-6">
+            ${planets.map((planet) => `<li>${planet.name}</li>`).join('')}
+          </ul>
+        `
+    } catch (error) {
+      output.innerHTML = `<p class="text-red-500">Failed to fetch planets: ${error.message}</p>`
     }
-  }
+  })
 
-  // Render the grouped data
-  let html = '<div class="space-y-6">'
-  for (const [planet, charList] of Object.entries(groupedCharacters)) {
-    html += `
-        <div>
-          <h2 class="text-2xl font-bold mb-2">${planet}</h2>
+  document.getElementById('fetch-ships').addEventListener('click', async () => {
+    output.innerHTML = '<p>Loading ships...</p>'
+    try {
+      const ships = await fetchData('starships')
+      output.innerHTML = `
+          <h2 class="text-2xl font-bold mb-2">Starships</h2>
           <ul class="list-disc pl-6">
-            ${charList.map((char) => `<li>${char}</li>`).join('')}
+            ${ships.map((ship) => `<li>${ship.name}</li>`).join('')}
           </ul>
-        </div>
-      `
-  }
-
-  // Render "Other Planets" list
-  if (otherCharacters.length > 0) {
-    html += `
-        <div>
-          <h2 class="text-2xl font-bold mb-2">Other Planets</h2>
-          <ul class="list-disc pl-6">
-            ${otherCharacters.map((char) => `<li>${char}</li>`).join('')}
-          </ul>
-        </div>
-      `
-  }
-
-  html += '</div>'
-  return html
+        `
+    } catch (error) {
+      output.innerHTML = `<p class="text-red-500">Failed to fetch ships: ${error.message}</p>`
+    }
+  })
 }
 
 export async function fetchData(endpoint) {
@@ -77,8 +68,8 @@ export async function fetchData(endpoint) {
       throw new Error(`Failed to fetch data from ${endpoint}`)
     }
     const data = await response.json()
-    console.log(`Fetched data from ${endpoint}:`, data) // Debugging
-    return data.result // Ensure this is an array
+    console.log(`Full API response from ${endpoint}:`, data) // Debugging
+    return data.result?.results || data.result // Adjust based on API response
   } catch (error) {
     console.error(`Error fetching data from ${endpoint}:`, error)
     throw error
