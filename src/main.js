@@ -1,4 +1,5 @@
-import { createForm, fetchData, handleButtonClicks } from './components/input.js'
+import { handleButtonClicks } from './components/button.js'
+import { createForm, fetchData } from './components/input.js'
 import './styles.css'
 
 async function initApp() {
