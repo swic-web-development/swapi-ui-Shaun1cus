@@ -1,7 +1,12 @@
 import { createForm, fetchData } from './components/input.js'
 import './styles.css'
 
-document.getElementById('app').innerHTML = createForm()
+document.getElementById('app').innerHTML = `
+  <div class="max-w-2xl mx-auto p-12 bg-gray-800 text-white rounded-xl shadow-2xl">
+    <h1 class="text-4xl font-extrabold mb-8 text-center">Star Wars Explorer</h1>
+    ${createForm()}
+  </div>
+`
 
 const categorySelect = document.getElementById('category')
 const itemSelect = document.getElementById('item')
@@ -30,16 +35,16 @@ itemSelect.addEventListener('change', async () => {
 
   if (!itemId) return
 
-  detailsDiv.innerHTML = 'Loading details...'
+  detailsDiv.innerHTML = '<p class="text-yellow-400 text-lg">Loading details...</p>'
 
   try {
     const itemDetails = await fetchData(`${category}/${itemId}`)
     detailsDiv.innerHTML = `
-      <h3>${itemDetails.properties.name}</h3>
-      <pre>${JSON.stringify(itemDetails.properties, null, 2)}</pre>
+      <h3 class="text-2xl font-bold mb-4">${itemDetails.properties.name}</h3>
+      <pre class="bg-gray-700 p-6 rounded-lg text-lg">${JSON.stringify(itemDetails.properties, null, 2)}</pre>
     `
   } catch (error) {
-    detailsDiv.innerHTML = 'Failed to load details'
+    detailsDiv.innerHTML = '<p class="text-red-500 text-lg">Failed to load details</p>'
     console.error(error)
   }
 })
