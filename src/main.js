@@ -1,11 +1,13 @@
 import { handleButtonClicks } from './components/button.js'
 import { createForm, fetchData } from './components/input.js'
+import { createTextarea, handleTextareaSubmit } from './components/textarea.js'
 import './styles.css'
 
 async function initApp() {
   const app = document.getElementById('app')
-  app.innerHTML = createForm()
+  app.innerHTML = createForm() + createTextarea() // Add the textarea to the form
   handleButtonClicks()
+  handleTextareaSubmit()
 
   // Fetch and display the people list on page load
   const output = document.getElementById('output')
