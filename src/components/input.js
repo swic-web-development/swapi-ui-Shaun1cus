@@ -8,6 +8,10 @@ export function createForm() {
           <button id="fetch-ships" class="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600 transition">Fetch Ships</button>
         </div>
         <div id="output" class="mt-8 p-6 bg-gray-800 text-white rounded-lg shadow-md"></div>
+        <div class="mt-6">
+          <textarea id="suggestion" class="w-full p-4 bg-gray-800 text-white rounded-lg border border-gray-700" rows="4" placeholder="Suggest an addition to the selected list..."></textarea>
+          <button id="submit-suggestion" class="mt-4 px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition">Submit Suggestion</button>
+        </div>
       </div>
     `
 }
@@ -21,7 +25,7 @@ export function handleButtonClicks() {
       const people = await fetchData('people')
       output.innerHTML = `
           <h2 class="text-2xl font-bold mb-2">People</h2>
-          <ul class="list-disc pl-6">
+          <ul class="list-disc pl-6 space-y-2" id="people-list">
             ${people.map((person) => `<li>${person.name}</li>`).join('')}
           </ul>
         `
@@ -31,12 +35,12 @@ export function handleButtonClicks() {
   })
 
   document.getElementById('fetch-planets').addEventListener('click', async () => {
-    output.innerHTML = '<p>Loading planets...</p>'
+    output.innerHTML = '<p class="text-yellow-400">Loading planets...</p>'
     try {
       const planets = await fetchData('planets')
       output.innerHTML = `
           <h2 class="text-2xl font-bold mb-2">Planets</h2>
-          <ul class="list-disc pl-6">
+          <ul class="list-disc pl-6 space-y-2" id="planets-list">
             ${planets.map((planet) => `<li>${planet.name}</li>`).join('')}
           </ul>
         `
@@ -46,12 +50,12 @@ export function handleButtonClicks() {
   })
 
   document.getElementById('fetch-ships').addEventListener('click', async () => {
-    output.innerHTML = '<p>Loading ships...</p>'
+    output.innerHTML = '<p class="text-yellow-400">Loading ships...</p>'
     try {
       const ships = await fetchData('starships')
       output.innerHTML = `
-          <h2 class="text-2xl font-bold mb-2">Starships</h2>
-          <ul class="list-disc pl-6">
+          <h2 class="text-2xl font-bold mb-4">Starships</h2>
+          <ul class="list-disc pl-6 space-y-2" id="ships-list">
             ${ships.map((ship) => `<li>${ship.name}</li>`).join('')}
           </ul>
         `
