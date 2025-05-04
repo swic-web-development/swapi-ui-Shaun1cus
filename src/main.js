@@ -1,50 +1,22 @@
-import { createForm, fetchData } from './components/input.js'
+import { renderPlanetCharacterList } from './components/input.js'
 import './styles.css'
 
-document.getElementById('app').innerHTML = `
-  <div class="max-w-2xl mx-auto p-12 bg-gray-800 text-white rounded-xl shadow-2xl">
-    <h1 class="text-4xl font-extrabold mb-8 text-center">Star Wars Explorer</h1>
-    ${createForm()}
-  </div>
-`
+async function initApp() {
+  const app = document.getElementById('app')
+  app.innerHTML = `
+    <div class="max-w-4xl mx-auto p-8 bg-gray-800 text-white rounded-lg shadow-lg">
+      <h1 class="text-4xl font-extrabold mb-6 text-center">Star Wars Planets & Characters</h1>
+      <div id="planet-character-list" class="space-y-6 text-lg"></div>
+    </div>
+  `
 
-const categorySelect = document.getElementById('category')
-const itemSelect = document.getElementById('item')
-const detailsDiv = document.getElementById('details')
-
-categorySelect.addEventListener('change', async () => {
-  const category = categorySelect.value
-  itemSelect.disabled = true
-  itemSelect.innerHTML = '<option value="">Loading...</option>'
-
+  const listContainer = document.getElementById('planet-character-list')
   try {
-    const items = await fetchData(category)
-    itemSelect.innerHTML = items
-      .map((item) => `<option value="${item.uid}">${item.name}</option>`)
-      .join('')
-    itemSelect.disabled = false
+    listContainer.innerHTML = await renderPlanetCharacterList()
   } catch (error) {
-    itemSelect.innerHTML = '<option value="">Failed to load items</option>'
+    listContainer.innerHTML = `<p class="text-red-500">Failed to load data: ${error.message}</p>`
     console.error(error)
   }
-})
+}
 
-itemSelect.addEventListener('change', async () => {
-  const category = categorySelect.value
-  const itemId = itemSelect.value
-
-  if (!itemId) return
-
-  detailsDiv.innerHTML = '<p class="text-yellow-400 text-lg">Loading details...</p>'
-
-  try {
-    const itemDetails = await fetchData(`${category}/${itemId}`)
-    detailsDiv.innerHTML = `
-      <h3 class="text-2xl font-bold mb-4">${itemDetails.properties.name}</h3>
-      <pre class="bg-gray-700 p-6 rounded-lg text-lg">${JSON.stringify(itemDetails.properties, null, 2)}</pre>
-    `
-  } catch (error) {
-    detailsDiv.innerHTML = '<p class="text-red-500 text-lg">Failed to load details</p>'
-    console.error(error)
-  }
-})
+initApp()
