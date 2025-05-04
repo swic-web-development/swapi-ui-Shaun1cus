@@ -20,7 +20,7 @@ export function handleButtonClicks() {
   const output = document.getElementById('output')
 
   document.getElementById('fetch-people').addEventListener('click', async () => {
-    output.innerHTML = '<p>Loading people...</p>'
+    output.innerHTML = '<p class="text-yellow-400">Loading people...</p>'
     try {
       const people = await fetchData('people')
       output.innerHTML = `
