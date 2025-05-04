@@ -1,13 +1,13 @@
 export function createForm() {
   return `
-      <div class="space-y-4">
-        <h1 class="text-3xl font-bold text-center mb-4">Star Wars Data Explorer</h1>
+      <div class="space-y-6 max-w-4xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+        <h1 class="text-4xl font-extrabold text-center mb-6">Star Wars Data Explorer</h1>
         <div class="flex justify-center space-x-4">
-          <button id="fetch-people" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Fetch People</button>
-          <button id="fetch-planets" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Fetch Planets</button>
-          <button id="fetch-ships" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Fetch Ships</button>
+          <button id="fetch-people" class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Fetch People</button>
+          <button id="fetch-planets" class="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition">Fetch Planets</button>
+          <button id="fetch-ships" class="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600 transition">Fetch Ships</button>
         </div>
-        <div id="output" class="mt-6 p-4 bg-gray-800 text-white rounded shadow-lg"></div>
+        <div id="output" class="mt-8 p-6 bg-gray-800 text-white rounded-lg shadow-md"></div>
       </div>
     `
 }
