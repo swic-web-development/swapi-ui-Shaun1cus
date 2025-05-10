@@ -1,28 +1,26 @@
-import { handleButtonClicks } from './components/button.js'
-import { createForm, fetchData } from './components/input.js'
-import { createTextarea, handleTextareaSubmit } from './components/textarea.js'
+import { fetchShips } from './actions.js'
+import ShipList from './components/ship-list.js'
+import store from './store.js'
 import './styles.css'
 
-async function initApp() {
-  const app = document.getElementById('app')
-  app.innerHTML = createForm() + createTextarea() // Add the textarea to the form
-  handleButtonClicks()
-  handleTextareaSubmit()
+const app = document.getElementById('app')
 
-  // Fetch and display the people list on page load
-  const output = document.getElementById('output')
-  output.innerHTML = '<p class="text-yellow-400">Loading people...</p>'
-  try {
-    const people = await fetchData('people')
-    output.innerHTML = `
-      <h2 class="text-2xl font-bold mb-4">People</h2>
-      <ul class="list-disc pl-6 space-y-2" id="people-list">
-        ${people.map((person) => `<li>${person.name}</li>`).join('')}
-      </ul>
+function render(state) {
+  if (state.error) {
+    app.innerHTML = `<p class="text-red-500 text-center font-bold mt-4">${state.error}</p>`
+  } else if (state.isLoading) {
+    app.innerHTML = '<p class="text-yellow-400 text-center font-semibold mt-4">Loading...</p>'
+  } else {
+    app.innerHTML = `
+      <div class="max-w-4xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+        ${ShipList(state.ships)}
+      </div>
     `
-  } catch (error) {
-    output.innerHTML = `<p class="text-red-500">Failed to fetch people: ${error.message}</p>`
   }
 }
 
-initApp()
+render(store.getState())
+
+store.subscribe(render)
+
+fetchShips()
